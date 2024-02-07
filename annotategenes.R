@@ -1,5 +1,5 @@
 install.pacakge("ggplot2")
-
+#source for the code https://www.biostars.org/p/147916/
 library(GenomicRanges)
 # generate 10 random segments
 regions.gr <- import("filepath", Format = "bedgraph")
