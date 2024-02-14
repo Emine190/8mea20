@@ -1,15 +1,22 @@
-install.pacakge("ggplot2")
-#source for the code https://www.biostars.org/p/147916/
-library(GenomicRanges)
-# generate 10 random segments
-regions.gr <- import("filepath", Format = "bedgraph")
+Maxima <- findMaxima(ASMdame,  range=10, metric=runif(length(regions)))
 
-# generate 5 random genes
-fiveGeneNames <- paste(sample(letters,5), sample(1:100,5), sep="")
-genes.gr <- import("genefile", format = "bedgraph")
+peaks <- cbind(ASMdame[1:3] ,Maxima)
+#now remove the false peaks 
+#check the row name to see if it is correct for the data. 
+
+truepeaks <- filter(peaks, z==TRUE)
+
+#check if truepeaks is grange or regular df. 
+
+install.pacakge("ggplot2")
+#load in the gene_names list
+library(GenomicRanges)
+
+genenames.gr <- import("gene_names", Format = "bed")
+
 
 # what regions overlap what genes?
-overlapGenes <- findOverlaps(regions.gr, genes.gr)
+overlapGenes <- findOverlaps(truepeaks, genenames.gr)
 
 # Return any genes with an overlap.
 # Convert the resulting "Hits" object to a data frame
@@ -24,10 +31,21 @@ regionsWithHits$genes <- names(genes.gr)[overlapGenes.df$subjectHits]
 
 # Some segments might not overlap any gene.
 # Find the distance to the nearest gene
-distanceToNearest(regions.gr, genes.gr)
+distanceToNearest(truepeaks, genes.gr)
 
 # if your genes and segments were in a bed file you could easily import them
 library(rtracklayer)
 regions <- import.bed("myRegions.bed",asRangedData=FALSE)
 genes <- import.bed("myGenes.bed",asRangedData=FALSE)
+#might not be needed depends.
+
+#try to plot 
+library("ggplot2")
+
+
+ggplot(ToothGrowth, aes(x = genename, y = ASM_score))+
+geomboxplot(notch = TRUE, fill = "lightgray")+
+  stat_summary(fun.y = mean, geom = "point",
+               shape = 18, size = 2.5, color = "#FC4E07")+
+scale_x_discrete(limits=c("GNAS", "SNRPN", "H19/IGF2"))
 
