@@ -15,10 +15,10 @@ library(GenomicRanges)
 genenames.gr <- import("gene_names", Format = "bed")
 
 
-# what regions overlap what genes?
+# what regions overlap what genes? HAve to be grange object for the code to work. 
 overlapGenes <- findOverlaps(truepeaks, genenames.gr)
 
-# Return any genes with an overlap.
+# Return any genes with an overlap. More info about this code on https://www.biostars.org/p/147916/ 
 # Convert the resulting "Hits" object to a data frame
 # and use it as an index
 overlapGenes.df <- as.data.frame(overlapGenes)
