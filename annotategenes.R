@@ -1,3 +1,9 @@
+install.packages("remotes")
+remotes::install_github("LTLA/csaw")
+library("csaw")
+library("dplyr")
+
+
 Maxima <- findMaxima(ASMdame,  range=10, metric=runif(length(regions)))
 
 peaks <- cbind(ASMdame[1:3] ,Maxima)
