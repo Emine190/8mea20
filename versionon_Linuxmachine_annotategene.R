@@ -4,7 +4,7 @@ library("csaw")
 library("dplyr")
 library(rtracklayer)
 
-ASMdame <- import("~/Documents/mykolasandi/C2.DAME_ASM.Gene.list.bedgraph", format = "bedgraph")
+ASMdame <- import("~/DAME_ASM.Gene.list.bedgraph", format = "bedgraph")
 Maxima <- findMaxima(ASMdame,  range=50, metric=runif(length(ASMdame)))
 
 
@@ -30,7 +30,7 @@ ggplot(no0zeropeaks ,aes(x = NA., y = score))+
   scale_x_discrete(limits=c("SNRPN", "IGF2", "TUBB8"))
 
 #Second maxima run
-abovezeropoint1 <- import("~/Documents/mykolasandi/C2.DAME_ASM.Gene.list.above0.1.bedgraph", format = "bedgraph")
+abovezeropoint1 <- import("~/DAME_ASM.Gene.list.above0.1.bedgraph", format = "bedgraph")
 BIngo <- findMaxima(abovezeropoint1,  range=50, metric=runif(length(abovezeropoint1)))
 bingoDF <- as.data.frame(abovezeropoint1)
 peaks <- cbind(bingoDF,BIngo)
