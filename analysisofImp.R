@@ -2,56 +2,75 @@ install.packages("remotes")
 remotes::install_github("LTLA/csaw")
 library("csaw")
 library("dplyr")
+library(rtracklayer)
+
+ASMdame <- import("~/Documents/mykolasandi/Emil/bedtoolsthings/C2ASMNAMESIMP.bed", format = "bedgraph")
+Maxima <- findMaxima(ASMdame,  range=50, metric=runif(length(ASMdame)))
 
 
-Maxima <- findMaxima(ASMdame,  range=10, metric=runif(length(regions)))
+myFiles <- list.files(pattern="*_Genenames.bed")
+for (i in 1:length(myFiles)) assign(myFiles[i], import(myFiles[i], format = "bedgraph")) 
 
-peaks <- cbind(ASMdame[1:3] ,Maxima)
+for (i in 1:length(myFiles)) assign(myFiles[i], findMaxima(myFiles[i], range = 50, metric = metric))
+
+for (i in seq_along(myFiles)){
+  input_files <- myFiles[i]
+  #Read the bed file
+  bed_data <- import(input_files, format = "begraph")
+  results <-findMaxima(bed_data , range = 50, metric = runif(length(input_files)))
+  #store results in list
+  
+}
+
+cotrolmax <- findMaxima(R10ASM_Genenames.bed, range = 50, metric = runif(length(R10ASM_Genenames.bed)))
+controldf <- as.data.frame(R10ASM_Genenames.bed)
+asmdameDF <- as.data.frame(ASMdame)
+peaks <- cbind(asmdameDF,Maxima)
 #now remove the false peaks 
 #check the row name to see if it is correct for the data. 
 
-truepeaks <- filter(peaks, z==TRUE)
-
+truepeaks <- filter(peaks, Maxima==TRUE)
+no0zeropeaks <- filter(truepeaks, truepeaks$score>0.1)
 #check if truepeaks is grange or regular df. 
 
-install.pacakge("ggplot2")
-#load in the gene_names list
-library(GenomicRanges)
-
-genenames.gr <- import("gene_names", Format = "bed")
-
-
-# what regions overlap what genes? HAve to be grange object for the code to work. 
-overlapGenes <- findOverlaps(truepeaks, genenames.gr)
-
-# Return any genes with an overlap. More info about this code on https://www.biostars.org/p/147916/ 
-# Convert the resulting "Hits" object to a data frame
-# and use it as an index
-overlapGenes.df <- as.data.frame(overlapGenes)
-names(genes.gr[overlapGenes.df$subjectHits])
-
-# extract the regions that hit genes
-regionsWithHits <- as.data.frame(regions.gr[overlapGenes.df$queryHits])
-# add the names of the genes
-regionsWithHits$genes <- names(genes.gr)[overlapGenes.df$subjectHits]
-
-# Some segments might not overlap any gene.
-# Find the distance to the nearest gene
-distanceToNearest(truepeaks, genes.gr)
-
-# if your genes and segments were in a bed file you could easily import them
-library(rtracklayer)
-regions <- import.bed("myRegions.bed",asRangedData=FALSE)
-genes <- import.bed("myGenes.bed",asRangedData=FALSE)
-#might not be needed depends.
-
+nozeropeaks_control <- filter(asmdameDF, asmdameDF$score>0.25)
 #try to plot 
 library("ggplot2")
 
 
-ggplot(ToothGrowth, aes(x = genename, y = ASM_score))+
-geomboxplot(notch = TRUE, fill = "lightgray")+
+ggplot(no0zeropeaks ,aes(x = NA., y = score))+
+  geom_boxplot(notch = FALSE, outlier.alpha = 0.5, outlier.colour = "red")+
   stat_summary(fun.y = mean, geom = "point",
-               shape = 18, size = 2.5, color = "#FC4E07")+
-scale_x_discrete(limits=c("GNAS", "SNRPN", "H19/IGF2"))
+               shape = 14, size = 2.5, color = "#FC4E07")+
+  scale_x_discrete(limits=c("SNRPN", "AC090602.2,SNRPN", "GNAS_Ex1A", "GNAS"))+
+  geom_jitter()
+
+
+ggplot(nozeropeaks_control ,aes(x = NA., y = score))+
+  geom_boxplot(notch = FALSE, outlier.alpha = 0.5, outlier.colour = "red")+
+  stat_summary(fun.y = mean, geom = "point",
+               shape = 14, size = 2.5, color = "#FC4E07")+
+  scale_x_discrete(limits=c("ELK3", "GNAS", "SNRPN_intragenic_CpG32", "SNRPN"))+
+  geom_jitter()
+
+
+
+
+#ignore below this as of now 23/2 - 2024
+#Second maxima run
+abovezeropoint1 <- import("~/Documents/mykolasandi/C2.DAME_ASM.Gene.list.above0.1.bedgraph", format = "bedgraph")
+BIngo <- findMaxima(abovezeropoint1,  range=50, metric=runif(length(abovezeropoint1)))
+bingoDF <- as.data.frame(abovezeropoint1)
+peaks <- cbind(bingoDF,BIngo)
+#now remove the false peaks 
+#check the row name to see if it is correct for the data. 
+
+newpeaks <- filter(peaks, BIngo==TRUE)
+
+
+ggplot(newpeaks ,aes(x = NA., y = score))+
+  geom_boxplot(notch = FALSE, outlier.alpha = 0.5, outlier.colour = "red")+
+  stat_summary(fun.y = mean, geom = "point",
+               shape = 14, size = 2.5, color = "#FC4E07")+
+  scale_x_discrete(limits=c("SNRPN", "GNAS", "TUBB8"))
 
