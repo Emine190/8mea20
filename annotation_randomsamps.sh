@@ -1,3 +1,6 @@
+#use this if you need random intervals with gene names. 
+#Use after Randomshuffle to get the name for the genes to get the 
+
 bedtools intersect -loj -a a /randomintervals/r1 -b /gene_list.bed > ./ASM_&_genenames/randoms_ASM_GENEs1
 bedtools intersect -loj -a a /randomintervals/r2 -b /gene_list.bed > ./ASM_&_genenames/randoms_ASM_GENEs2
 bedtools intersect -loj -a a /randomintervals/r3 -b /gene_list.bed > ./ASM_&_genenames/randoms_ASM_GENEs3
