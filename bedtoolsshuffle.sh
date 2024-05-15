@@ -1,3 +1,6 @@
+#This is only to be used if a control of the ASM values is necessary otherwise ignore this.  
+#Also note that only run 1 line at a time for this. 
+
 bedtools shuffle -incl ./genes.with.promoters -chrom -noOverlapping -i /home/impnonames.bed -g ./chromosomes > ./RandomIntervals/r1
 bedtools shuffle -incl ./genes.with.promoters -chrom -noOverlapping -i /home/impnonames.bed -g ./chromosomes > ./RandomIntervals/r2
 bedtools shuffle -incl ./genes.with.promoters -chrom -noOverlapping -i /home/impnonames.bed -g ./chromosomes > ./RandomIntervals/r3
