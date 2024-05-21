@@ -7,9 +7,9 @@ library(ggplot2)
 library(readxl)
 library(dplyr)
 library(fortify)
-Site_Region <- read_excel("~/Downloads/8mea20_Site_Region.xlsx")
+Site_Region <- read_excel("~/Site_Region.xlsx")
 
-Methylation_Site_REgion<-read_excel("~/Downloads/8mea20_Site_Region.xlsx")
+Methylation_Site_REgion<-read_excel("~/Site_Region.xlsx")
 
 
 Site_region.df <- as.data.frame(Site_Region)
